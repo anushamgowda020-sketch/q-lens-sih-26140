@@ -81,6 +81,59 @@
     </div>
 
 </section>
+<!-- ============================= -->
+<!-- QUANTUM ALGORITHM LIBRARY -->
+<!-- ============================= -->
+
+<section class="card">
+
+    <h2>⚛️ Quantum Algorithm Library</h2>
+
+    <p>
+        Explore predefined quantum algorithms
+        and load them directly into the simulator.
+    </p>
+
+    <div class="algorithm-controls">
+
+        <label for="algorithmSelect">
+            Choose Algorithm:
+        </label>
+
+        <select id="algorithmSelect">
+
+            <option value="">
+                Select an algorithm
+            </option>
+
+            <option value="bell">
+                🔗 Bell State
+            </option>
+
+            <option value="superposition">
+                🌊 Superposition
+            </option>
+
+        </select>
+
+        <button id="loadAlgorithm">
+            ⚡ Load Algorithm
+        </button>
+
+    </div>
+
+    <div id="algorithmDescription">
+
+        Choose an algorithm to see its description.
+
+    </div>
+    <div id="algorithmWalkthrough">
+
+    Select an algorithm to see its step-by-step walkthrough.
+
+</div>
+
+</section>
 
     <!-- ============================= -->
     <!-- QUANTUM CIRCUIT SIMULATOR -->
@@ -93,32 +146,7 @@
         <p>
             Build a quantum circuit and simulate its behaviour.
         </p>
-        <div class="algorithm-controls">
-
-    <label for="algorithmSelect">
-        Choose Algorithm:
-    </label>
-
-    <select id="algorithmSelect">
-
-        <option value="">
-            Select an algorithm
-        </option>
-
-        <option value="bell">
-            🔗 Bell State
-        </option>
-        <option value="superposition">
-    🌊 Superposition
-</option>
-
-    </select>
-
-    <button id="loadAlgorithm">
-        ⚡ Load Algorithm
-    </button>
-
-</div>
+      
 
 
         <div class="controls">
@@ -377,6 +405,27 @@
 
     </section>
     <!-- ============================= -->
+<!-- QUANTUM STATE VISUALIZATION -->
+<!-- ============================= -->
+
+<section class="card">
+
+    <h2>⚛️ Current Quantum State</h2>
+
+    <p>
+        Visual representation of the quantum state
+        produced by your circuit.
+    </p>
+
+    <div id="quantumState">
+
+        Run a simulation to visualize
+        the quantum state.
+
+    </div>
+
+</section>
+    <!-- ============================= -->
 <!-- PREDICTION MODE -->
 <!-- ============================= -->
 
@@ -436,6 +485,6 @@
 
 <script src="script.js" defer></script>
 
-</body>
+</body
 
 </html>

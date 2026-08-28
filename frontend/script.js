@@ -628,6 +628,10 @@ ${JSON.stringify(
         displayStateProbabilities(
             data.statevector
         );
+         displayQuantumState(
+        data.statevector
+    );
+
 
     } else {
 
@@ -1991,3 +1995,286 @@ function showQuizResult() {
 // ==========================================
 
 startQuiz();
+// ==========================================
+// QUANTUM ALGORITHM LIBRARY
+// ==========================================
+
+
+
+
+
+const algorithmDescription =
+    document.getElementById("algorithmDescription");
+
+
+// ==========================================
+// LOAD SELECTED ALGORITHM
+// ==========================================
+
+loadAlgorithmButton.addEventListener(
+    "click",
+    function () {
+
+        const algorithm =
+            algorithmSelect.value;
+
+
+        // No algorithm selected
+
+        if (algorithm === "") {
+
+            algorithmDescription.innerHTML = `
+
+                <p>
+                    ⚠️ Please select an algorithm first.
+                </p>
+
+            `;
+
+            return;
+
+        }
+
+
+        // ==================================
+        // BELL STATE
+        // ==================================
+
+        if (algorithm === "bell") {
+
+            // Clear existing circuit
+
+            circuitData.gates = [];
+
+
+            // H on q0
+
+            circuitData.gates.push({
+
+                type: "h",
+
+                qubit: 0
+
+            });
+
+
+            // CX q0 -> q1
+
+            circuitData.gates.push({
+
+                type: "cx",
+
+                control: 0,
+
+                target: 1
+
+            });
+
+
+            algorithmDescription.innerHTML = `
+
+                <h3>
+                    🔗 Bell State
+                </h3>
+
+                <p>
+                    The Bell state demonstrates
+                    quantum entanglement between
+                    two qubits.
+                </p>
+
+                <p>
+                    The circuit applies a Hadamard
+                    gate to q₀ followed by a
+                    Controlled-X gate.
+                </p>
+
+                <p>
+                    Expected state:
+                    <b>
+                        (|00⟩ + |11⟩) / √2
+                    </b>
+                </p>
+
+                <p>
+                    Expected measurement:
+                    approximately 50% |00⟩ and
+                    50% |11⟩.
+                </p>
+
+            `;
+
+        }
+
+
+        // ==================================
+        // SUPERPOSITION
+        // ==================================
+
+        else if (
+            algorithm === "superposition"
+        ) {
+
+            // Clear existing circuit
+
+            circuitData.gates = [];
+
+
+            // H on q0
+
+            circuitData.gates.push({
+
+                type: "h",
+
+                qubit: 0
+
+            });
+
+
+            algorithmDescription.innerHTML = `
+
+                <h3>
+                    🌊 Superposition
+                </h3>
+
+                <p>
+                    The Hadamard gate creates a
+                    superposition on q₀.
+                </p>
+
+                <p>
+                    The qubit becomes a combination
+                    of |0⟩ and |1⟩.
+                </p>
+
+                <p>
+                    Expected probabilities:
+                    approximately 50% |0⟩ and
+                    50% |1⟩ for q₀.
+                </p>
+
+            `;
+
+        }
+
+
+        // ==================================
+        // UPDATE CIRCUIT
+        // ==================================
+
+        displayCircuit();
+
+        displayExplanation();
+
+    }
+);
+// ==========================================
+// QUANTUM STATE DISPLAY
+// ==========================================
+
+function displayQuantumState(statevector) {
+
+    const quantumStateBox =
+        document.getElementById("quantumState");
+
+    if (
+        !statevector ||
+        statevector.length === 0
+    ) {
+
+        quantumStateBox.innerHTML =
+            "No quantum state data received.";
+
+        return;
+
+    }
+
+
+    let stateText = "";
+
+
+    statevector.forEach(function (state) {
+
+        const basisState =
+            state.basis_state;
+
+        const real =
+            Number(state.real);
+
+        const imaginary =
+            Number(state.imaginary);
+
+
+        // Ignore states with zero amplitude
+
+        if (
+            Math.abs(real) < 0.0001 &&
+            Math.abs(imaginary) < 0.0001
+        ) {
+
+            return;
+
+        }
+
+
+        // Real-only amplitude
+
+        if (
+            Math.abs(imaginary) < 0.0001
+        ) {
+
+            stateText +=
+                `${real.toFixed(3)}|${basisState}⟩ `;
+
+        }
+
+
+        // Imaginary-only amplitude
+
+        else if (
+            Math.abs(real) < 0.0001
+        ) {
+
+            stateText +=
+                `${imaginary.toFixed(3)}i|${basisState}⟩ `;
+
+        }
+
+
+        // Complex amplitude
+
+        else {
+
+            stateText +=
+                `(${real.toFixed(3)} + ${imaginary.toFixed(3)}i)|${basisState}⟩ `;
+
+        }
+
+    });
+
+
+    if (stateText === "") {
+
+        stateText =
+            "Quantum state could not be represented.";
+
+    }
+
+
+    quantumStateBox.innerHTML = `
+
+        <div class="quantum-state-display">
+
+            <h3>
+                |ψ⟩ =
+            </h3>
+
+            <p>
+                ${stateText}
+            </p>
+
+        </div>
+
+    `;
+
+}
