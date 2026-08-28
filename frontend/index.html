@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Q-LENS | Quantum Learning Platform</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+<header>
+
+    <h1>⚛️ Q-LENS</h1>
+
+    <p>
+        Interactive Quantum Algorithm Learning Platform
+    </p>
+
+</header>
+
+
+<main>
+<!-- ============================= -->
+<!-- LEARNING MODE -->
+<!-- ============================= -->
+
+<section class="card">
+
+    <h2>🧠 Quantum Learning Mode</h2>
+
+    <p>
+        Choose a concept to learn about quantum computing.
+    </p>
+
+    <div class="learning-controls">
+
+        <label for="conceptSelect">
+            Choose Concept:
+        </label>
+
+        <select id="conceptSelect">
+
+            <option value="qubit">
+                ⚛️ Qubit
+            </option>
+
+            <option value="superposition">
+                🌊 Superposition
+            </option>
+
+            <option value="entanglement">
+                🔗 Entanglement
+            </option>
+
+            <option value="measurement">
+                🎯 Quantum Measurement
+            </option>
+
+        </select>
+
+        <button id="learnButton">
+            Learn
+        </button>
+
+    </div>
+
+    <div id="lessonContent">
+
+        Choose a concept and click
+        <b>Learn</b>.
+
+    </div>
+
+</section>
+
+    <!-- ============================= -->
+    <!-- QUANTUM CIRCUIT SIMULATOR -->
+    <!-- ============================= -->
+
+    <section class="card">
+
+        <h2>Quantum Circuit Simulator</h2>
+
+        <p>
+            Build a quantum circuit and simulate its behaviour.
+        </p>
+
+
+        <div class="controls">
+
+            <label for="gateSelect">
+                Choose Gate:
+            </label>
+
+            <select id="gateSelect">
+
+                <option value="h">
+                    H — Hadamard
+                </option>
+
+                <option value="x">
+                    X — Pauli-X
+                </option>
+
+                <option value="y">
+                    Y — Pauli-Y
+                </option>
+
+                <option value="z">
+                    Z — Pauli-Z
+                </option>
+
+                <option value="cx">
+                    CX — Controlled-X
+                </option>
+
+            </select>
+
+
+            <label for="qubitSelect">
+                Choose Qubit:
+            </label>
+
+            <select id="qubitSelect">
+
+                <option value="0">
+                    Qubit 0
+                </option>
+
+                <option value="1">
+                    Qubit 1
+                </option>
+
+            </select>
+
+
+            <label
+                for="targetSelect"
+                id="targetLabel"
+                style="display:none;"
+            >
+                Target:
+            </label>
+
+
+            <select
+                id="targetSelect"
+                style="display:none;"
+            >
+
+                <option value="0">
+                    Qubit 0
+                </option>
+
+                <option value="1">
+                    Qubit 1
+                </option>
+
+            </select>
+
+
+            <button id="addGate">
+                + Add Gate
+            </button>
+
+        </div>
+
+
+        <!-- CIRCUIT -->
+
+        <div id="circuit" class="circuit">
+
+            <div class="qubit">
+
+                <span>q₀</span>
+
+                <div
+                    id="q0wire"
+                    class="wire"
+                ></div>
+
+            </div>
+
+
+            <div class="qubit">
+
+                <span>q₁</span>
+
+                <div
+                    id="q1wire"
+                    class="wire"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <button
+            id="runSimulation"
+            class="run-button"
+        >
+            ▶ Run Simulation
+        </button>
+
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- MEASUREMENT RESULTS -->
+    <!-- ============================= -->
+
+    <section class="card">
+
+        <h2>Measurement Results</h2>
+
+        <div id="results">
+
+            Click
+            <b>Run Simulation</b>
+            to execute the circuit.
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- CIRCUIT EXPLANATION -->
+    <!-- ============================= -->
+
+    <section class="card">
+
+        <h2>🧠 Circuit Explanation</h2>
+
+        <div id="explanation">
+
+            Add gates to your circuit
+            to see an explanation.
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ============================= -->
+    <!-- QUANTUM STATE PROBABILITIES -->
+    <!-- ============================= -->
+
+    <section class="card">
+
+        <h2>📊 Quantum State Probabilities</h2>
+
+        <div id="stateProbabilities">
+
+            Run a simulation to see
+            quantum state probabilities.
+
+        </div>
+
+    </section>
+    <!-- ============================= -->
+<!-- PREDICTION MODE -->
+<!-- ============================= -->
+
+<section class="card">
+
+    <h2>🎯 Predict the Result</h2>
+
+    <p>
+        Before running the simulation, predict
+        which states you expect to observe.
+    </p>
+
+    <label for="predictionSelect">
+        Choose your prediction:
+    </label>
+
+    <select id="predictionSelect">
+
+        <option value="">
+            Select an answer
+        </option>
+
+        <option value="00-11">
+            |00⟩ and |11⟩
+        </option>
+
+        <option value="00-01">
+            |00⟩ and |01⟩
+        </option>
+
+        <option value="00-10">
+            |00⟩ and |10⟩
+        </option>
+
+        <option value="all">
+            All four states
+        </option>
+
+    </select>
+
+    <button id="checkPrediction">
+        Check Prediction
+    </button>
+
+    <div id="predictionFeedback">
+
+        Make your prediction before
+        running the simulation.
+
+    </div>
+
+</section>
+
+
+</main>
+
+
+<script src="script.js" defer></script>
+
+</body>
+
+</html>
