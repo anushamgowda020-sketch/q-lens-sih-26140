@@ -1,7 +1,11 @@
 // ==========================================
 // GET HTML ELEMENTS
 // ==========================================
+const algorithmSelect =
+    document.getElementById("algorithmSelect");
 
+const loadAlgorithmButton =
+    document.getElementById("loadAlgorithm");
 const gateSelect =
     document.getElementById("gateSelect");
 
@@ -19,6 +23,8 @@ const addGateButton =
 
 const runButton =
     document.getElementById("runSimulation");
+const clearButton =
+    document.getElementById("clearCircuit");    
 
 const resultsBox =
     document.getElementById("results");
@@ -28,6 +34,10 @@ const explanationBox =
 
 const probabilityBox =
     document.getElementById("stateProbabilities");
+const gateInfo =
+    document.getElementById("gateInfo");    
+const algorithmWalkthrough =
+    document.getElementById("algorithmWalkthrough");    
 const predictionFeedback =
     document.getElementById("predictionFeedback");    
 
@@ -176,6 +186,23 @@ function displayCircuit() {
             target.className = "gate";
 
             target.textContent = "X";
+            control.addEventListener(
+    "click",
+    function () {
+
+        showGateInformation(gate);
+
+    }
+);
+
+target.addEventListener(
+    "click",
+    function () {
+
+        showGateInformation(gate);
+
+    }
+);
 
 
             if (gate.control === 0) {
@@ -207,6 +234,14 @@ function displayCircuit() {
 
             gateElement.textContent =
                 gate.type.toUpperCase();
+            gateElement.addEventListener(
+    "click",
+    function () {
+
+        showGateInformation(gate);
+
+    }
+);    
 
 
             if (gate.qubit === 0) {
@@ -1114,3 +1149,845 @@ function calculatePredictionAccuracy(results) {
 
     return accuracy;
 }
+// ==========================================
+// CLEAR CIRCUIT
+// ==========================================
+
+clearButton.addEventListener(
+    "click",
+    function () {
+
+        circuitData.gates = [];
+
+        displayCircuit();
+
+        displayExplanation();
+
+        resultsBox.innerHTML =
+            "Click Run Simulation to execute the circuit.";
+
+        probabilityBox.innerHTML =
+            "Add gates to see quantum state probabilities.";
+
+        predictionFeedback.innerHTML =
+            "Make a prediction before running the simulation.";
+
+        selectedPrediction = "";
+
+    }
+);
+// ==========================================
+// ALGORITHM PRESETS
+// ==========================================
+
+loadAlgorithmButton.addEventListener(
+    "click",
+    function () {
+
+        const algorithm =
+            algorithmSelect.value;
+
+        if (algorithm === "") {
+
+            alert(
+                "Please select an algorithm first."
+            );
+
+            return;
+        }
+
+        // ==============================
+        // BELL STATE
+        // ==============================
+
+        if (algorithm === "bell") {
+
+            circuitData.gates = [
+
+                {
+                    type: "h",
+                    qubit: 0
+                },
+
+                {
+                    type: "cx",
+                    control: 0,
+                    target: 1
+                }
+
+            ];
+
+            displayCircuit();
+
+            displayExplanation();
+
+            displayBellWalkthrough();
+
+            resultsBox.innerHTML =
+                "Bell State circuit loaded. Make your prediction and run the simulation.";
+
+            probabilityBox.innerHTML =
+                "Run the simulation to see quantum state probabilities.";
+
+            predictionFeedback.innerHTML =
+                "Make your prediction before running the simulation.";
+
+        }
+        // ==============================
+// SUPERPOSITION
+// ==============================
+
+if (algorithm === "superposition") {
+
+    circuitData.gates = [
+
+        {
+            type: "h",
+            qubit: 0
+        }
+
+    ];
+
+    displayCircuit();
+
+    displayExplanation();
+
+    displaySuperpositionWalkthrough();
+
+    resultsBox.innerHTML =
+        "Superposition circuit loaded. Make your prediction and run the simulation.";
+
+    probabilityBox.innerHTML =
+        "Run the simulation to see quantum state probabilities.";
+
+    predictionFeedback.innerHTML =
+        "Make your prediction before running the simulation.";
+
+}
+
+    }
+);
+// ==========================================
+// INTERACTIVE ALGORITHM WALKTHROUGH
+// ==========================================
+
+function displayBellWalkthrough() {
+
+    algorithmWalkthrough.innerHTML = `
+
+        <h2>🔗 Bell State Walkthrough</h2>
+
+        <div class="walkthrough-step">
+
+            <h3>Step 1 — Create Superposition</h3>
+
+            <p>
+                Apply the Hadamard gate (H) to
+                qubit 0.
+            </p>
+
+            <p>
+                This changes q₀ from |0⟩ into:
+            </p>
+
+            <p>
+                <b>
+                    (|0⟩ + |1⟩) / √2
+                </b>
+            </p>
+
+            <p>
+                The qubit now has approximately
+                50% probability of being measured
+                as |0⟩ or |1⟩.
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 2 — Create Entanglement</h3>
+
+            <p>
+                Apply a Controlled-X (CX) gate
+                with q₀ as the control and
+                q₁ as the target.
+            </p>
+
+            <p>
+                This creates an entangled Bell state:
+            </p>
+
+            <p>
+                <b>
+                    (|00⟩ + |11⟩) / √2
+                </b>
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 3 — Make Your Prediction 🎯</h3>
+
+            <p>
+                Before running the simulation,
+                predict which states will be observed.
+            </p>
+
+            <p>
+                Expected outcomes:
+                <b>|00⟩ and |11⟩</b>
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 4 — Run the Simulation ⚛️</h3>
+
+            <p>
+                Click <b>Run Simulation</b> to
+                observe the actual measurement results.
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 5 — Understand the Result 🧠</h3>
+
+            <p>
+                You should observe approximately:
+            </p>
+
+            <p>
+                <b>|00⟩ ≈ 50%</b>
+            </p>
+
+            <p>
+                <b>|11⟩ ≈ 50%</b>
+            </p>
+
+            <p>
+                This correlation is a signature of
+                quantum entanglement.
+            </p>
+
+        </div>
+
+    `;
+
+}
+// ==========================================
+// SUPERPOSITION WALKTHROUGH
+// ==========================================
+
+function displaySuperpositionWalkthrough() {
+
+    algorithmWalkthrough.innerHTML = `
+
+        <h2>🌊 Superposition Walkthrough</h2>
+
+        <div class="walkthrough-step">
+
+            <h3>Step 1 — Start State</h3>
+
+            <p>
+                Both qubits initially begin in
+                the state |0⟩.
+            </p>
+
+            <p>
+                The initial two-qubit state is:
+            </p>
+
+            <p>
+                <b>|00⟩</b>
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 2 — Apply Hadamard Gate</h3>
+
+            <p>
+                Apply the H gate to qubit 0.
+            </p>
+
+            <p>
+                The Hadamard gate creates
+                superposition.
+            </p>
+
+            <p>
+                q₀ becomes:
+            </p>
+
+            <p>
+                <b>
+                    (|0⟩ + |1⟩) / √2
+                </b>
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 3 — Understand the Probabilities 📊</h3>
+
+            <p>
+                Measuring q₀ gives approximately:
+            </p>
+
+            <p>
+                <b>P(0) = 50%</b>
+            </p>
+
+            <p>
+                <b>P(1) = 50%</b>
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 4 — Predict 🎯</h3>
+
+            <p>
+                The complete two-qubit measurement
+                should produce approximately:
+            </p>
+
+            <p>
+                <b>|00⟩ ≈ 50%</b>
+            </p>
+
+            <p>
+                <b>|01⟩ ≈ 50%</b>
+            </p>
+
+        </div>
+
+
+        <div class="walkthrough-step">
+
+            <h3>Step 5 — Run the Simulation ⚛️</h3>
+
+            <p>
+                Click <b>Run Simulation</b> and
+                compare your prediction with the
+                actual measurement results.
+            </p>
+
+        </div>
+
+    `;
+
+}
+// ==========================================
+// GATE INFORMATION
+// ==========================================
+
+function showGateInformation(gate) {
+
+    if (gate.type === "h") {
+
+        gateInfo.innerHTML = `
+
+            <h3>🌊 Hadamard Gate (H)</h3>
+
+            <p>
+                Applied to qubit ${gate.qubit}.
+            </p>
+
+            <p>
+                The Hadamard gate creates
+                quantum superposition.
+            </p>
+
+            <p>
+                <b>
+                    |0⟩ → (|0⟩ + |1⟩) / √2
+                </b>
+            </p>
+
+            <p>
+                Expected probabilities:
+            </p>
+
+            <p>
+                P(0) ≈ 50%
+            </p>
+
+            <p>
+                P(1) ≈ 50%
+            </p>
+
+        `;
+
+    }
+
+
+    else if (gate.type === "x") {
+
+        gateInfo.innerHTML = `
+
+            <h3>🔄 Pauli-X Gate (X)</h3>
+
+            <p>
+                Applied to qubit ${gate.qubit}.
+            </p>
+
+            <p>
+                The X gate flips the qubit state.
+            </p>
+
+            <p>
+                <b>
+                    |0⟩ → |1⟩
+                </b>
+            </p>
+
+            <p>
+                <b>
+                    |1⟩ → |0⟩
+                </b>
+            </p>
+
+        `;
+
+    }
+
+
+    else if (gate.type === "y") {
+
+        gateInfo.innerHTML = `
+
+            <h3>🌀 Pauli-Y Gate (Y)</h3>
+
+            <p>
+                Applied to qubit ${gate.qubit}.
+            </p>
+
+            <p>
+                The Y gate changes both the
+                amplitude and phase of the state.
+            </p>
+
+        `;
+
+    }
+
+
+    else if (gate.type === "z") {
+
+        gateInfo.innerHTML = `
+
+            <h3>🔀 Pauli-Z Gate (Z)</h3>
+
+            <p>
+                Applied to qubit ${gate.qubit}.
+            </p>
+
+            <p>
+                The Z gate changes the phase
+                of the |1⟩ state.
+            </p>
+
+            <p>
+                <b>
+                    |0⟩ → |0⟩
+                </b>
+            </p>
+
+            <p>
+                <b>
+                    |1⟩ → −|1⟩
+                </b>
+            </p>
+
+        `;
+
+    }
+
+
+    else if (gate.type === "cx") {
+
+        gateInfo.innerHTML = `
+
+            <h3>🔗 Controlled-X Gate (CX)</h3>
+
+            <p>
+                Control qubit:
+                <b>${gate.control}</b>
+            </p>
+
+            <p>
+                Target qubit:
+                <b>${gate.target}</b>
+            </p>
+
+            <p>
+                The X operation is applied to
+                the target only when the control
+                qubit is |1⟩.
+            </p>
+
+            <p>
+                CX is commonly used to create
+                quantum entanglement.
+            </p>
+
+        `;
+
+    }
+
+}
+// ==========================================
+// QUIZ / ASSESSMENT MODE
+// ==========================================
+
+const quizOptions =
+    document.querySelectorAll(".quiz-option");
+
+const quizFeedback =
+    document.getElementById("quizFeedback");
+
+
+// ==========================================
+// QUIZ QUESTIONS
+// ==========================================
+
+const quizQuestions = [
+
+    {
+        question:
+            "What does the Hadamard (H) gate primarily create?",
+
+        options: [
+            "Entanglement",
+            "Superposition",
+            "Measurement",
+            "A classical bit"
+        ],
+
+        correct: 1
+    },
+
+
+    {
+        question:
+            "Which gate is commonly used to create entanglement between two qubits?",
+
+        options: [
+            "X gate",
+            "Z gate",
+            "CX gate",
+            "H gate"
+        ],
+
+        correct: 2
+    },
+
+
+    {
+        question:
+            "What is the result of measuring a qubit?",
+
+        options: [
+            "A classical outcome",
+            "Another qubit",
+            "A new quantum gate",
+            "A probability equation"
+        ],
+
+        correct: 0
+    }
+
+];
+
+
+// ==========================================
+// QUIZ STATE
+// ==========================================
+
+let quizScore = 0;
+
+let currentQuestion = 0;
+
+
+// ==========================================
+// START QUIZ
+// ==========================================
+
+function startQuiz() {
+
+    quizScore = 0;
+
+    currentQuestion = 0;
+
+    showQuizQuestion();
+
+}
+
+
+// ==========================================
+// SHOW QUESTION
+// ==========================================
+
+function showQuizQuestion() {
+
+    const question =
+        quizQuestions[currentQuestion];
+
+
+    const quizContainer =
+        document.getElementById("quizQuestion");
+
+
+    quizContainer.innerHTML = `
+
+        <h3>
+            Question ${currentQuestion + 1}
+            / ${quizQuestions.length}
+        </h3>
+
+        <p>
+            <b>
+                ${question.question}
+            </b>
+        </p>
+
+        <div class="quiz-options">
+
+            ${question.options.map(
+                function (option, index) {
+
+                    return `
+
+                        <button
+                            class="quiz-option"
+                            data-index="${index}"
+                        >
+                            ${String.fromCharCode(65 + index)}.
+                            ${option}
+                        </button>
+
+                    `;
+
+                }
+            ).join("")}
+
+        </div>
+
+    `;
+
+
+    quizFeedback.innerHTML =
+        "Choose an answer.";
+
+
+    const options =
+        quizContainer.querySelectorAll(
+            ".quiz-option"
+        );
+
+
+    options.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                handleQuizAnswer
+            );
+
+        }
+    );
+
+}
+
+
+// ==========================================
+// CHECK ANSWER
+// ==========================================
+
+function handleQuizAnswer(event) {
+
+    const selectedAnswer =
+        Number(
+            event.target.dataset.index
+        );
+
+
+    const correctAnswer =
+        quizQuestions[currentQuestion].correct;
+
+
+    const options =
+        document.querySelectorAll(
+            "#quizQuestion .quiz-option"
+        );
+
+
+    // Prevent multiple clicks
+
+    options.forEach(
+        function (button) {
+
+            button.disabled = true;
+
+        }
+    );
+
+
+    if (
+        selectedAnswer ===
+        correctAnswer
+    ) {
+
+        quizScore++;
+
+
+        quizFeedback.innerHTML = `
+
+            <h3>
+                🎉 Correct!
+            </h3>
+
+            <p>
+                Great job! Your answer is correct.
+            </p>
+
+        `;
+
+    } else {
+
+        quizFeedback.innerHTML = `
+
+            <h3>
+                ❌ Not quite!
+            </h3>
+
+            <p>
+                The correct answer is:
+                <b>
+                    ${quizQuestions[currentQuestion]
+                        .options[correctAnswer]}
+                </b>
+            </p>
+
+        `;
+
+    }
+
+
+    setTimeout(
+        function () {
+
+            currentQuestion++;
+
+
+            if (
+                currentQuestion <
+                quizQuestions.length
+            ) {
+
+                showQuizQuestion();
+
+            } else {
+
+                showQuizResult();
+
+            }
+
+        },
+        1200
+    );
+
+}
+
+
+// ==========================================
+// FINAL QUIZ RESULT
+// ==========================================
+
+function showQuizResult() {
+
+    const quizContainer =
+        document.getElementById("quizQuestion");
+
+
+    let message = "";
+
+
+    if (quizScore === 3) {
+
+        message =
+            "Excellent quantum understanding! 🏆";
+
+    } else if (quizScore === 2) {
+
+        message =
+            "Good understanding! Keep practicing. 💪";
+
+    } else {
+
+        message =
+            "Keep learning and try the quiz again! 📚";
+
+    }
+
+
+    quizContainer.innerHTML = `
+
+        <h2>
+            🏆 Quiz Complete!
+        </h2>
+
+        <h3>
+            Score:
+            ${quizScore} / ${quizQuestions.length}
+        </h3>
+
+        <p>
+            ${message}
+        </p>
+
+        <button
+            id="restartQuiz"
+            class="run-button"
+        >
+            🔄 Try Again
+        </button>
+
+    `;
+
+
+    quizFeedback.innerHTML =
+        "Assessment completed.";
+
+
+    document
+        .getElementById("restartQuiz")
+        .addEventListener(
+            "click",
+            startQuiz
+        );
+
+}
+
+
+// ==========================================
+// START INITIAL QUIZ
+// ==========================================
+
+startQuiz();

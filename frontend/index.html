@@ -93,6 +93,32 @@
         <p>
             Build a quantum circuit and simulate its behaviour.
         </p>
+        <div class="algorithm-controls">
+
+    <label for="algorithmSelect">
+        Choose Algorithm:
+    </label>
+
+    <select id="algorithmSelect">
+
+        <option value="">
+            Select an algorithm
+        </option>
+
+        <option value="bell">
+            🔗 Bell State
+        </option>
+        <option value="superposition">
+    🌊 Superposition
+</option>
+
+    </select>
+
+    <button id="loadAlgorithm">
+        ⚡ Load Algorithm
+    </button>
+
+</div>
 
 
         <div class="controls">
@@ -203,7 +229,15 @@
             </div>
 
         </div>
+<div id="gateInfo">
 
+    <h3>🔍 Gate Information</h3>
+
+    <p>
+        Click a gate in the circuit to learn what it does.
+    </p>
+
+</div>
 
         <button
             id="runSimulation"
@@ -211,6 +245,12 @@
         >
             ▶ Run Simulation
         </button>
+        <button
+    id="clearCircuit"
+    class="run-button"
+>
+    🗑️ Clear Circuit
+</button>
 
 
     </section>
@@ -234,6 +274,65 @@
         </div>
 
     </section>
+    <!-- ============================= -->
+<!-- QUIZ / ASSESSMENT MODE -->
+<!-- ============================= -->
+
+<section class="card">
+
+    <h2>📝 Quantum Knowledge Check</h2>
+
+    <p>
+        Test your understanding of quantum computing.
+    </p>
+
+    <div id="quizQuestion">
+
+        <h3>
+            What does the Hadamard (H) gate primarily create?
+        </h3>
+
+        <div class="quiz-options">
+
+            <button
+                class="quiz-option"
+                data-answer="entanglement"
+            >
+                A. Entanglement
+            </button>
+
+            <button
+                class="quiz-option"
+                data-answer="superposition"
+            >
+                B. Superposition
+            </button>
+
+            <button
+                class="quiz-option"
+                data-answer="measurement"
+            >
+                C. Measurement
+            </button>
+
+            <button
+                class="quiz-option"
+                data-answer="classical"
+            >
+                D. A classical bit
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="quizFeedback">
+
+        Choose an answer to test your knowledge.
+
+    </div>
+
+</section>
 
 
 
@@ -251,6 +350,11 @@
             to see an explanation.
 
         </div>
+        <div id="algorithmWalkthrough">
+
+    Select an algorithm to begin the interactive walkthrough.
+
+</div>
 
     </section>
 
