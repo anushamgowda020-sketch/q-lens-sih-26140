@@ -557,47 +557,140 @@ runButton.addEventListener(
 
             if (data.success) {
 
+    // ==============================
+    // MEASUREMENT RESULTS
+    // ==============================
 
-                // Measurement results
+    resultsBox.innerHTML = `
 
-                resultsBox.innerHTML = `
+        <h3>
+            Simulation Successful ✅
+        </h3>
 
-                    <h3>
-                        Simulation Successful ✅
-                    </h3>
+        <p>
+            Measurement Results:
+        </p>
 
-                    <p>
-                        Measurement Results:
-                    </p>
-
-                    <pre>
+        <pre>
 ${JSON.stringify(
     data.results,
     null,
     2
 )}
-                    </pre>
+        </pre>
 
-                `;
+    `;
 
 
-                // State probabilities
+    // ==============================
+    // STATE PROBABILITIES
+    // ==============================
 
-                if (data.statevector) {
+    if (data.statevector) {
 
-                    displayStateProbabilities(
-                        data.statevector
-                    );
+        displayStateProbabilities(
+            data.statevector
+        );
 
-                } else {
+    } else {
 
-                    probabilityBox.innerHTML =
-                        "State probability data was not received.";
+        probabilityBox.innerHTML =
+            "State probability data was not received.";
 
-                }
+    }
 
-            }
 
+    // ==============================
+    // PREDICTION EVALUATION
+    // ==============================
+
+    const prediction =
+        predictionSelect.value;
+
+
+    if (prediction === "") {
+
+        predictionFeedback.innerHTML = `
+
+            <h3>🤔 No Prediction Made</h3>
+
+            <p>
+                Try making a prediction before
+                running the simulation next time.
+            </p>
+
+        `;
+
+    } else {
+
+        const results =
+            data.results;
+
+
+        const has00 =
+            results["00"] !== undefined &&
+            results["00"] > 0;
+
+        const has11 =
+            results["11"] !== undefined &&
+            results["11"] > 0;
+
+
+        if (
+            prediction === "00-11" &&
+            has00 &&
+            has11
+        ) {
+
+            predictionFeedback.innerHTML = `
+
+                <h3>🎉 Prediction Correct!</h3>
+
+                <p>
+                    Your prediction:
+                    <b>|00⟩ and |11⟩</b>
+                </p>
+
+                <p>
+                    The simulation produced both
+                    |00⟩ and |11⟩ outcomes.
+                </p>
+
+                <h3>🏆 Score: 10 / 10</h3>
+
+                <p>
+                    Excellent! You correctly predicted
+                    the Bell-state measurement outcomes.
+                </p>
+
+            `;
+
+        } else {
+
+            predictionFeedback.innerHTML = `
+
+                <h3>💡 Not Quite!</h3>
+
+                <p>
+                    Your prediction did not match
+                    the observed measurement outcomes.
+                </p>
+
+                <p>
+                    Review the circuit and try again.
+                </p>
+
+                <h3>🏆 Score: 0 / 10</h3>
+
+            `;
+
+        }
+
+    }
+
+}
+
+                
 
             else {
 
