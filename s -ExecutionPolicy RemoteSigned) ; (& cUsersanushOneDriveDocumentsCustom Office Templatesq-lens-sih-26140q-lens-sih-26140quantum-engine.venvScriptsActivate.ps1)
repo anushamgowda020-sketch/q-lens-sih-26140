@@ -1,0 +1,221 @@
+[1mdiff --git a/frontend/script.js b/frontend/script.js[m
+[1mindex 65e2353..80d3858 100644[m
+[1m--- a/frontend/script.js[m
+[1m+++ b/frontend/script.js[m
+[36m@@ -604,88 +604,164 @@[m [m${JSON.stringify([m
+     // PREDICTION EVALUATION[m
+     // ==============================[m
+ [m
+[31m-    const prediction =[m
+[31m-        predictionSelect.value;[m
+[32m+[m[32m    // ==============================[m
+[32m+[m[32m// PREDICTION EVALUATION[m
+[32m+[m[32m// ==============================[m
+ [m
+[32m+[m[32mconst prediction =[m
+[32m+[m[32m    predictionSelect.value;[m
+ [m
+[31m-    if (prediction === "") {[m
+ [m
+[31m-        predictionFeedback.innerHTML = `[m
+[32m+[m[32mif (prediction === "") {[m
+ [m
+[31m-            <h3>🤔 No Prediction Made</h3>[m
+[32m+[m[32m    predictionFeedback.innerHTML = `[m
+ [m
+[31m-            <p>[m
+[31m-                Try making a prediction before[m
+[31m-                running the simulation next time.[m
+[31m-            </p>[m
+[32m+[m[32m        <h3>🤔 No Prediction Made</h3>[m
+ [m
+[31m-        `;[m
+[32m+[m[32m        <p>[m
+[32m+[m[32m            Try making a prediction before[m
+[32m+[m[32m            running the simulation.[m
+[32m+[m[32m        </p>[m
+ [m
+[31m-    } else {[m
+[32m+[m[32m    `;[m
+ [m
+[31m-        const results =[m
+[31m-            data.results;[m
+[32m+[m[32m} else {[m
+ [m
+[32m+[m[32m    const results = data.results;[m
+ [m
+[31m-        const has00 =[m
+[31m-            results["00"] !== undefined &&[m
+[31m-            results["00"] > 0;[m
+[32m+[m[32m    const totalShots =[m
+[32m+[m[32m        Object.values(results)[m
+[32m+[m[32m            .reduce([m
+[32m+[m[32m                (sum, value) => sum + value,[m
+[32m+[m[32m                0[m
+[32m+[m[32m            );[m
+ [m
+[31m-        const has11 =[m
+[31m-            results["11"] !== undefined &&[m
+[31m-            results["11"] > 0;[m
+ [m
+[32m+[m[32m    const probability00 =[m
+[32m+[m[32m        totalShots > 0 &&[m
+[32m+[m[32m        results["00"] !== undefined[m
+[32m+[m[32m            ? (results["00"] / totalShots) * 100[m
+[32m+[m[32m            : 0;[m
+ [m
+[31m-        if ([m
+[31m-            prediction === "00-11" &&[m
+[31m-            has00 &&[m
+[31m-            has11[m
+[31m-        ) {[m
+ [m
+[31m-            predictionFeedback.innerHTML = `[m
+[32m+[m[32m    const probability11 =[m
+[32m+[m[32m        totalShots > 0 &&[m
+[32m+[m[32m        results["11"] !== undefined[m
+[32m+[m[32m            ? (results["11"] / totalShots) * 100[m
+[32m+[m[32m            : 0;[m
+ [m
+[31m-                <h3>🎉 Prediction Correct!</h3>[m
+ [m
+[31m-                <p>[m
+[31m-                    Your prediction:[m
+[31m-                    <b>|00⟩ and |11⟩</b>[m
+[31m-                </p>[m
+[32m+[m[32m    if (prediction === "00-11") {[m
+ [m
+[31m-                <p>[m
+[31m-                    The simulation produced both[m
+[31m-                    |00⟩ and |11⟩ outcomes.[m
+[31m-                </p>[m
+[32m+[m[32m        const error00 =[m
+[32m+[m[32m            Math.abs(50 - probability00);[m
+ [m
+[31m-                <h3>🏆 Score: 10 / 10</h3>[m
+[32m+[m[32m        const error11 =[m
+[32m+[m[32m            Math.abs(50 - probability11);[m
+ [m
+[31m-                <p>[m
+[31m-                    Excellent! You correctly predicted[m
+[31m-                    the Bell-state measurement outcomes.[m
+[31m-                </p>[m
+[32m+[m[32m        const averageError =[m
+[32m+[m[32m            (error00 + error11) / 2;[m
+ [m
+[31m-            `;[m
+ [m
+[31m-        } else {[m
+[32m+[m[32m        const accuracy =[m
+[32m+[m[32m            Math.max([m
+[32m+[m[32m                0,[m
+[32m+[m[32m                100 - (averageError * 2)[m
+[32m+[m[32m            );[m
+ [m
+[31m-            predictionFeedback.innerHTML = `[m
+ [m
+[31m-                <h3>💡 Not Quite!</h3>[m
+[32m+[m[32m        let score;[m
+ [m
+[31m-                <p>[m
+[31m-                    Your prediction did not match[m
+[31m-                    the observed measurement outcomes.[m
+[31m-                </p>[m
+ [m
+[31m-                <p>[m
+[31m-                    Review the circuit and try again.[m
+[31m-                </p>[m
+[32m+[m[32m        if (accuracy >= 90) {[m
+ [m
+[31m-                <h3>🏆 Score: 0 / 10</h3>[m
+[32m+[m[32m            score = 10;[m
+ [m
+[31m-            `;[m
+[32m+[m[32m        } else if (accuracy >= 75) {[m
+[32m+[m
+[32m+[m[32m            score = 8;[m
+[32m+[m
+[32m+[m[32m        } else if (accuracy >= 60) {[m
+[32m+[m
+[32m+[m[32m            score = 6;[m
+[32m+[m
+[32m+[m[32m        } else if (accuracy >= 40) {[m
+[32m+[m
+[32m+[m[32m            score = 4;[m
+[32m+[m
+[32m+[m[32m        } else {[m
+[32m+[m
+[32m+[m[32m            score = 2;[m
+ [m
+         }[m
+ [m
+[32m+[m
+[32m+[m[32m        predictionFeedback.innerHTML = `[m
+[32m+[m
+[32m+[m[32m            <h3>🎯 Prediction Evaluation</h3>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                Your prediction:[m
+[32m+[m[32m                <b>|00⟩ and |11⟩</b>[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <hr>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                <b>Actual probabilities:</b>[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                |00⟩ → ${probability00.toFixed(1)}%[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                |11⟩ → ${probability11.toFixed(1)}%[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <hr>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                Prediction Accuracy:[m
+[32m+[m[32m                <b>${accuracy.toFixed(1)}%</b>[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <h3>[m
+[32m+[m[32m                🏆 Score: ${score} / 10[m
+[32m+[m[32m            </h3>[m
+[32m+[m
+[32m+[m[32m        `;[m
+[32m+[m
+[32m+[m[32m    } else {[m
+[32m+[m
+[32m+[m[32m        predictionFeedback.innerHTML = `[m
+[32m+[m
+[32m+[m[32m            <h3>💡 Prediction Recorded</h3>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                Your prediction was:[m
+[32m+[m[32m                <b>${prediction}</b>[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                The current circuit produced:[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m            <pre>[m
+[32m+[m[32m${JSON.stringify([m
+[32m+[m[32m    results,[m
+[32m+[m[32m    null,[m
+[32m+[m[32m    2[m
+[32m+[m[32m)}[m
+[32m+[m[32m            </pre>[m
+[32m+[m
+[32m+[m[32m            <p>[m
+[32m+[m[32m                Try modifying the circuit and[m
+[32m+[m[32m                predicting again.[m
+[32m+[m[32m            </p>[m
+[32m+[m
+[32m+[m[32m        `;[m
+[32m+[m
+     }[m
+ [m
+ }[m

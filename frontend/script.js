@@ -28,6 +28,8 @@ const explanationBox =
 
 const probabilityBox =
     document.getElementById("stateProbabilities");
+const predictionFeedback =
+    document.getElementById("predictionFeedback");    
 
 
 // ==========================================
@@ -606,7 +608,7 @@ ${JSON.stringify(
 
     const prediction =
         predictionSelect.value;
-
+console.log("Prediction value:", prediction);
 
     if (prediction === "") {
 
@@ -622,10 +624,41 @@ ${JSON.stringify(
         `;
 
     } else {
-
+console.log("STEP 12B REACHED");
         const results =
             data.results;
+            const accuracy =
+    calculatePredictionAccuracy(results);
 
+console.log(
+    "Prediction accuracy:",
+    accuracy.toFixed(2) + "%"
+);
+predictionFeedback.innerHTML = `
+
+    <h3>🎯 Prediction Evaluation</h3>
+
+    <p>
+        Prediction Accuracy:
+        <b>${accuracy.toFixed(2)}%</b>
+    </p>
+
+`;
+predictionFeedback.innerHTML = `
+
+    <h3>🎯 Prediction Evaluation</h3>
+
+    <p>
+        Your prediction:
+        <b>|00⟩ and |11⟩</b>
+    </p>
+
+    <p>
+        Prediction Accuracy:
+        <b>${accuracy.toFixed(2)}%</b>
+    </p>
+
+`;
 
         const has00 =
             results["00"] !== undefined &&
@@ -657,6 +690,10 @@ ${JSON.stringify(
                 </p>
 
                 <h3>🏆 Score: 10 / 10</h3>
+                <p>
+    🎯 Prediction Accuracy:
+    <b>${accuracy.toFixed(2)}%</b>
+</p>
 
                 <p>
                     Excellent! You correctly predicted
@@ -963,15 +1000,14 @@ learnButton.addEventListener(
 // ==========================================
 // PREDICTION MODE
 // ==========================================
-
+let selectedPrediction = "";
 const predictionSelect =
     document.getElementById("predictionSelect");
 
 const checkPredictionButton =
     document.getElementById("checkPrediction");
 
-const predictionFeedback =
-    document.getElementById("predictionFeedback");
+
 
 
 checkPredictionButton.addEventListener(
@@ -979,7 +1015,10 @@ checkPredictionButton.addEventListener(
     function () {
 
         const prediction =
-            predictionSelect.value;
+    predictionSelect.value;
+
+selectedPrediction =
+    prediction;
 
 
         if (prediction === "") {
@@ -1029,3 +1068,49 @@ checkPredictionButton.addEventListener(
 
     }
 );
+
+
+// ==========================================
+// PROBABILITY-BASED PREDICTION SCORE
+// ==========================================
+
+function calculatePredictionAccuracy(results) {
+
+    const totalShots =
+        Object.values(results)
+            .reduce(
+                (sum, value) => sum + value,
+                0
+            );
+
+    if (totalShots === 0) {
+        return 0;
+    }
+
+    const probability00 =
+        results["00"] !== undefined
+            ? (results["00"] / totalShots) * 100
+            : 0;
+
+    const probability11 =
+        results["11"] !== undefined
+            ? (results["11"] / totalShots) * 100
+            : 0;
+
+    const error00 =
+        Math.abs(50 - probability00);
+
+    const error11 =
+        Math.abs(50 - probability11);
+
+    const averageError =
+        (error00 + error11) / 2;
+
+    const accuracy =
+        Math.max(
+            0,
+            100 - (averageError * 2)
+        );
+
+    return accuracy;
+}
