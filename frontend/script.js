@@ -673,6 +673,149 @@ console.log(
     "Prediction accuracy:",
     accuracy.toFixed(2) + "%"
 );
+// ==========================================
+// UPDATE LEARNING MASTERY
+// ==========================================
+
+const learningConcept =
+    detectLearningConcept(
+        circuitData.gates
+    );
+
+
+let masteryGain = 0;
+
+
+// Strong performance
+
+if (accuracy >= 80) {
+
+    masteryGain = 10;
+
+}
+
+
+// Moderate performance
+
+else if (accuracy >= 50) {
+
+    masteryGain = 5;
+
+}
+
+
+// Attempt / low performance
+
+else {
+
+    masteryGain = 2;
+
+}
+
+
+updateLearningMastery(
+    learningConcept,
+    masteryGain
+);
+
+
+console.log(
+    "Learning concept:",
+    learningConcept
+);
+
+console.log(
+    "Mastery gained:",
+    masteryGain
+);
+if (prediction !== "") {
+
+   const mistakeAnalysis =
+    analyzePredictionMistake(
+        prediction,
+        results,
+        circuitData.gates
+    );
+
+    console.log(
+        "Mistake Analysis:",
+        mistakeAnalysis
+    );
+    // ==========================================
+// PERSONALIZED RECOMMENDATION
+// STEP 23B
+// ==========================================
+
+const recommendation =
+    generateLearningRecommendation(
+        mistakeAnalysis,
+        circuitData.gates
+    );
+
+console.log(
+    "Learning Recommendation:",
+    recommendation
+);
+
+
+    // ==========================================
+    // DISPLAY MISTAKE ANALYSIS
+    // ==========================================
+
+    predictionFeedback.innerHTML += `
+
+        <div class="mistake-analysis">
+
+            <h3>
+                🧠 Learning Analysis
+            </h3>
+
+            <p>
+                <strong>Concept:</strong>
+                ${mistakeAnalysis.concept}
+            </p>
+
+            <p>
+                <strong>Why?</strong>
+                ${mistakeAnalysis.explanation}
+            </p>
+
+            <p>
+                <strong>💡 Recommendation:</strong>
+                ${mistakeAnalysis.recommendation}
+            </p>
+
+        </div>
+
+    `;
+    predictionFeedback.innerHTML += `
+
+    <div class="learning-recommendation">
+
+        <h3>
+            🎓 Your Next Learning Step
+        </h3>
+
+        <p>
+            <strong>Topic:</strong>
+            ${recommendation.topic}
+        </p>
+
+        <p>
+            <strong>Try this:</strong>
+            ${recommendation.activity}
+        </p>
+
+        <p>
+            <strong>Learning Goal:</strong>
+            ${recommendation.goal}
+        </p>
+
+    </div>
+
+`;
+
+}
 predictionFeedback.innerHTML = `
 
     <h3>🎯 Prediction Evaluation</h3>
@@ -2276,5 +2419,517 @@ function displayQuantumState(statevector) {
         </div>
 
     `;
+
+}
+// ==========================================
+// EXPLAIN MY MISTAKE ENGINE
+// STEP 22A
+// ==========================================
+function analyzePredictionMistake(
+    prediction,
+    results,
+    gates
+) {
+
+    const has00 =
+        results["00"] !== undefined &&
+        results["00"] > 0;
+
+    const has01 =
+        results["01"] !== undefined &&
+        results["01"] > 0;
+
+    const has10 =
+        results["10"] !== undefined &&
+        results["10"] > 0;
+
+    const has11 =
+        results["11"] !== undefined &&
+        results["11"] > 0;
+
+
+    // ------------------------------------------
+    // Bell State mistake
+    // ------------------------------------------
+
+    if (
+        prediction === "00-11" &&
+        has00 &&
+        has11
+    ) {
+
+        return {
+
+            concept: "Bell State / Entanglement",
+
+            explanation:
+                "Your prediction matches the expected Bell-state outcomes.",
+
+            recommendation:
+                "Try the next quantum challenge."
+
+        };
+
+    }
+
+
+    if (
+        prediction === "00-11" &&
+        (has01 || has10)
+    ) {
+
+        return {
+
+            concept: "Controlled-X / Entanglement",
+
+            explanation:
+                "Your prediction expected |00⟩ and |11⟩, but the circuit produced other states. Check the control and target qubits of the CX gate.",
+
+            recommendation:
+                "Review Controlled-X gates and try building the Bell state again."
+
+        };
+
+    }
+
+
+    // ------------------------------------------
+    // Prediction of 00 + 01
+    // ------------------------------------------
+
+    if (
+        prediction === "00-01" &&
+        (has00 || has01)
+    ) {
+
+        return {
+
+            concept: "Superposition / Qubit Correlation",
+
+            explanation:
+                "Your prediction expected |00⟩ and |01⟩. Check whether the circuit contains a controlled operation that correlates the two qubits.",
+
+            recommendation:
+                "Review how CX changes the target qubit based on the control qubit."
+
+        };
+
+    }
+
+
+    // ------------------------------------------
+    // Prediction of 00 + 10
+    // ------------------------------------------
+
+    if (
+        prediction === "00-10" &&
+        (has00 || has10)
+    ) {
+
+        return {
+
+            concept: "Qubit State Transformation",
+
+            explanation:
+                "Your prediction expected |00⟩ and |10⟩. Review which qubit receives the Hadamard or other gate.",
+
+            recommendation:
+                "Review single-qubit gates and their effect on the circuit."
+
+        };
+
+    }
+
+
+    // ------------------------------------------
+    // All four states
+    // ------------------------------------------
+
+    if (prediction === "all") {
+
+        const stateCount =
+            [has00, has01, has10, has11]
+                .filter(Boolean)
+                .length;
+
+
+        if (stateCount === 4) {
+
+            return {
+
+                concept: "Multi-State Superposition",
+
+                explanation:
+                    "Your prediction matched a circuit producing all four computational basis states.",
+
+                recommendation:
+                    "Try a more advanced quantum circuit."
+
+            };
+
+        }
+
+    }
+
+// ------------------------------------------
+// Circuit-aware Bell State analysis
+// ------------------------------------------
+
+const hasHadamard =
+    gates.some(
+        gate =>
+            gate.type === "h"
+    );
+
+const hasCX =
+    gates.some(
+        gate =>
+            gate.type === "cx"
+    );
+
+
+if (
+    hasHadamard &&
+    hasCX &&
+    prediction !== "00-11"
+) {
+
+    return {
+
+        concept:
+            "Bell State / Quantum Entanglement",
+
+        explanation:
+            "Your circuit contains a Hadamard gate followed by a Controlled-X gate. This combination creates correlations between the two qubits, so the expected Bell-state outcomes are |00⟩ and |11⟩.",
+
+        recommendation:
+            "Try predicting |00⟩ and |11⟩ for this circuit, then run the simulation again."
+
+    };
+
+}
+    // ------------------------------------------
+    // General fallback
+    // ------------------------------------------
+
+    return {
+
+        concept: "Quantum Circuit Reasoning",
+
+        explanation:
+            "The observed result did not match your prediction. Examine the gates, their qubits, and the order in which they were applied.",
+
+        recommendation:
+            "Review the circuit step by step and try the prediction again."
+
+    };
+
+}
+// ==========================================
+// PERSONALIZED LEARNING RECOMMENDATION
+// STEP 23A
+// ==========================================
+
+function generateLearningRecommendation(
+    mistakeAnalysis,
+    gates
+) {
+    // ==========================================
+// PRIORITY: BELL STATE / ENTANGLEMENT
+// ==========================================
+
+const hasHadamard =
+    gates.some(
+        gate => gate.type === "h"
+    );
+
+const hasCX =
+    gates.some(
+        gate => gate.type === "cx"
+    );
+
+if (hasHadamard && hasCX) {
+
+    return {
+
+        topic:
+            "Quantum Entanglement",
+
+        activity:
+            "Build a Bell state using H(q₀) followed by CX(q₀,q₁).",
+
+        goal:
+            "Understand how quantum entanglement creates correlated measurement outcomes."
+
+    };
+
+}
+
+    const concept =
+        mistakeAnalysis.concept;
+
+
+    // Bell State / Entanglement
+    if (
+        concept.includes("Bell") ||
+        concept.includes("Entanglement")
+    ) {
+
+        return {
+
+            topic:
+                "Quantum Entanglement",
+
+            activity:
+                "Build a Bell state using H(q₀) followed by CX(q₀,q₁).",
+
+            goal:
+                "Understand how two qubits become correlated."
+
+        };
+
+    }
+
+
+    // Controlled-X
+    if (
+        concept.includes("Controlled-X")
+    ) {
+
+        return {
+
+            topic:
+                "Controlled-X Gate",
+
+            activity:
+                "Experiment with different control and target qubits.",
+
+            goal:
+                "Understand how the control qubit affects the target."
+
+        };
+
+    }
+
+
+    // Superposition
+    if (
+        concept.includes("Superposition")
+    ) {
+
+        return {
+
+            topic:
+                "Quantum Superposition",
+
+            activity:
+                "Apply an H gate to a qubit and observe its state probabilities.",
+
+            goal:
+                "Understand how a qubit can exist in a combination of states."
+
+        };
+
+    }
+
+
+    // General recommendation
+    return {
+
+        topic:
+            "Quantum Circuit Reasoning",
+
+        activity:
+            "Build a simple circuit and predict its measurement outcomes before running it.",
+
+        goal:
+            "Improve your understanding of how quantum gates affect measurement."
+
+    };
+
+}
+// ==========================================
+// STUDENT LEARNING PROGRESS
+// STEP 23C
+// ==========================================
+
+const learningProgress = {
+
+    superposition: 0,
+
+    entanglement: 0,
+
+    measurement: 0
+
+};
+function displayLearningProgress() {
+
+    const progressBox =
+        document.getElementById(
+            "learningProgress"
+        );
+
+
+    if (!progressBox) {
+        return;
+    }
+
+
+    const overall =
+        Math.round(
+            (
+                learningProgress.superposition +
+                learningProgress.entanglement +
+                learningProgress.measurement
+            ) / 3
+        );
+
+
+    progressBox.innerHTML = `
+
+        <div class="progress-item">
+
+            <strong>
+                🌊 Superposition
+            </strong>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:${learningProgress.superposition}%"
+                ></div>
+
+            </div>
+
+            <span>
+                ${learningProgress.superposition}%
+            </span>
+
+        </div>
+
+
+        <div class="progress-item">
+
+            <strong>
+                🔗 Entanglement
+            </strong>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:${learningProgress.entanglement}%"
+                ></div>
+
+            </div>
+
+            <span>
+                ${learningProgress.entanglement}%
+            </span>
+
+        </div>
+
+
+        <div class="progress-item">
+
+            <strong>
+                🎯 Measurement
+            </strong>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width:${learningProgress.measurement}%"
+                ></div>
+
+            </div>
+
+            <span>
+                ${learningProgress.measurement}%
+            </span>
+
+        </div>
+
+
+        <hr>
+
+        <h3>
+            🏆 Overall Mastery: ${overall}%
+        </h3>
+
+    `;
+
+}
+displayLearningProgress();
+// ==========================================
+// UPDATE STUDENT MASTERY
+// STEP 23D
+// ==========================================
+
+function updateLearningMastery(
+    concept,
+    performance
+) {
+
+    if (!learningProgress.hasOwnProperty(concept)) {
+        return;
+    }
+
+
+    // Increase mastery based on performance
+
+    learningProgress[concept] =
+        Math.min(
+            100,
+            learningProgress[concept] + performance
+        );
+
+
+    displayLearningProgress();
+
+}
+// ==========================================
+// DETECT LEARNING CONCEPT
+// ==========================================
+
+function detectLearningConcept(gates) {
+
+    const hasHadamard =
+        gates.some(
+            gate => gate.type === "h"
+        );
+
+    const hasCX =
+        gates.some(
+            gate => gate.type === "cx"
+        );
+
+
+    // H + CX = Entanglement
+
+    if (
+        hasHadamard &&
+        hasCX
+    ) {
+
+        return "entanglement";
+
+    }
+
+
+    // H = Superposition
+
+    if (hasHadamard) {
+
+        return "superposition";
+
+    }
+
+
+    // Measurement-based activity
+
+    return "measurement";
 
 }
